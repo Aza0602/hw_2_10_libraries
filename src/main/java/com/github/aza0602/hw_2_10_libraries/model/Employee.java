@@ -6,31 +6,32 @@ import java.util.Objects;
 
 public class Employee {
 
-    @JsonProperty("firstName")
-    private String firstName;
-    @JsonProperty("lastName")
-    private String lastName;
+    public String getSurname;
+    @JsonProperty("name")
+    private String name;
+    @JsonProperty("surname")
+    private String surname;
     private int department;
     private int salary;
 
-    public Employee(String firstName, String lastName, int department, int salary) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public Employee(String name, String surname, int department, int salary) {
+        this.name = name;
+        this.surname = surname;
         this.department = department;
         this.salary = salary;
     }
 
-    public Employee(String firstName, String lastName) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public Employee(String name, String surname) {
+        this.name = name;
+        this.surname = surname;
     }
 
     public String getFirstName() {
-        return firstName;
+        return name;
     }
 
     public String getLastName() {
-        return lastName;
+        return surname;
     }
 
     public int getDepartment() {
@@ -58,16 +59,20 @@ public class Employee {
             return false;
         }
         Employee employee = (Employee) o;
-        return Objects.equals(firstName, employee.firstName) && Objects.equals(lastName, employee.lastName);
+        return Objects.equals(name, employee.name) && Objects.equals(surname, employee.surname);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(firstName, lastName);
+        return Objects.hash(name, surname);
     }
 
     @Override
     public String toString() {
-        return String.format("ФИ: %s %s, отдел: %d, ЗП: %d", lastName, firstName, department, salary);
+        return String.format("ФИ: %s %s, отдел: %d, ЗП: %d", surname, name, department, salary);
+    }
+
+    public Object getName() {
+        return null;
     }
 }
