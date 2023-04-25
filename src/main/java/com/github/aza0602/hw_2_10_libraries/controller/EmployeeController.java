@@ -1,15 +1,15 @@
 package com.github.aza0602.hw_2_10_libraries.controller;
 
 
-
+import com.github.aza0602.hw_2_10_libraries.exception.IncorrectLastNameException;
+import com.github.aza0602.hw_2_10_libraries.exception.IncorrectNameException;
 import com.github.aza0602.hw_2_10_libraries.model.Employee;
-import com.github.aza0602.hw_2_10_libraries.service.EmployeeService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/employee")
@@ -23,25 +23,36 @@ public class EmployeeController {
     }
 
     @GetMapping("/add")
-    public Employee add(@RequestParam ("firstName") String firstName,
-                        @RequestParam ("lastName") String lastName,
-                        @RequestParam ("department") int department,
-                        @RequestParam ("salary") int salary) {
-        return EmployeeService.add(firstName, lastName, department, salary);
-    }
-    @GetMapping("/remove")
-    public Employee remove(@RequestParam String firstName,
-                           @RequestParam String lastName) {
-        return EmployeeService.remove(firstName, lastName);
-    }
-    @GetMapping("/find")
-    public Employee find(@RequestParam String firstName,
-                         @RequestParam String lastName) {
-        return EmployeeService.find(firstName, lastName);
+    public Employee add(@RequestParam("name") String name,
+                        @RequestParam("surname") String surname,
+                        @RequestParam int department,
+                        @RequestParam int salary) {
+        return employeeService.add(name, surname, department, salary);
     }
 
-        @GetMapping("/")
-        public Collection<Employee> employees() {
-            return employeeService.employees();
-        }
+    @GetMapping("/remove")
+    public Employee remove(@RequestParam("name") String name,
+                           @RequestParam("surname") String surname) {
+        return employeeService.remove(name, surname);
+    }
+
+    @GetMapping("/find")
+    public Employee find(@RequestParam("name") String name,
+                         @RequestParam("surname") String surname) {
+        return employeeService.find(name, surname);
+    }
+
+    @GetMapping("/")
+    public List<Employee> getAll() { return employeeService.getAll(); }
+
+    @ExceptionHandler(value = {
+            IncorrectNameException.class,
+            IncorrectLastNameException.class
+    })
+
+    public ResponseEntity<String> handleValidationErrors(RuntimeException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.TEXT_HTML)
+                .body("Некорректные данные");
+    }
 }
